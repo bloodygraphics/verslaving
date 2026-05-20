@@ -1,254 +1,504 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>#LuLz</title>
-<link rel="icon" href="https://files.catbox.moe/g79cqn.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#lulz</title>
 
-<style>
-body, html{
-  margin:0;
-  background:#000;
-  color:#fff;
-  font-family:sans-serif;
-  overflow:auto;
-  scrollbar-width:none;
-  -ms-overflow-style:none;
-}
-body::-webkit-scrollbar{display:none;}
+  <link rel="icon" type="image/png" href="https://asset.verslaving.lol/verslaving/troll-left.png">
 
-.video-section{
-  position:relative;
-  width:100%;
-  height:100vh;
-  overflow:hidden;
-}
+  <style>
 
-.bg-video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center;
-  display:block;
-}
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      cursor:url("https://asset.verslaving.lol/verslaving/cursor.cur") 0 0, auto;
+    }
 
-#overlay{
-  position:fixed;
-  top:0;left:0;right:0;bottom:0;
-  background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.5rem;
-  cursor:pointer;
-  transition:opacity .5s ease;
-  z-index:10;
-  user-select:none;
-}
+    html,
+    body{
+      width:100%;
+      height:100%;
+    }
 
-#overlay.hidden{
-  opacity:0;
-  pointer-events:none;
-}
+    body{
+      background:#000;
+      overflow:hidden;
 
-.content{
-  position:relative;
-  background:#000;
-  min-height:25vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:2;
-}
+      display:flex;
+      justify-content:center;
+      align-items:center;
 
-.icon-row{
-  display:flex;
-  gap:2rem;
-  flex-wrap:wrap;
-  justify-content:center;
-}
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;
+    }
 
-.icon{
-  position:relative;
-  display:inline-block;
-  cursor:pointer;
-}
+    #bgVideo{
+      position:fixed;
+      inset:0;
 
-.icon img{
-  width:64px;
-  height:64px;
-  object-fit:contain;
-  transition:transform .2s ease;
-}
+      width:100%;
+      height:100%;
 
-.icon:hover img{
-  transform:scale(1.2);
-}
+      object-fit:cover;
 
-.tooltip{
-  position:absolute;
-  bottom:110%;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,.8);
-  padding:4px 8px;
-  border-radius:4px;
-  font-size:.8rem;
-  white-space:nowrap;
-  opacity:0;
-  visibility:hidden;
-  transition:opacity .2s ease;
-  pointer-events:none;
-}
+      opacity:0;
+      z-index:0;
 
-.icon:hover .tooltip{
-  opacity:1;
-  visibility:visible;
-}
+      pointer-events:none;
 
-#view-counter{
-  position:absolute;
-  top:20px;
-  right:20px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  font-size:1.4rem;
-  opacity:0;
-  transition:opacity .5s ease;
-  pointer-events:none;
-  z-index:15;
-}
+      transition:opacity 3s ease;
+    }
 
-#view-counter.visible{opacity:1;}
+    .mac-window{
+      width:680px;
+      min-height:420px;
 
-#view-counter img{
-  width:1.6em;
-  height:1.6em;
-  object-fit:contain;
-}
-</style>
+      position:relative;
+      z-index:2;
+
+      overflow:hidden;
+
+      border-radius:12px;
+
+      background:rgba(30,30,30,.25);
+
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+
+      box-shadow:
+        0 0 0 .5px rgba(255,255,255,.08),
+        0 8px 32px rgba(0,0,0,.6),
+        0 32px 80px rgba(0,0,0,.4),
+        0 2px 4px rgba(0,0,0,.5);
+
+      display:flex;
+      flex-direction:column;
+
+      animation:showWindow .4s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    @keyframes showWindow{
+
+      from{
+        opacity:0;
+        transform:scale(.92) translateY(16px);
+      }
+
+      to{
+        opacity:1;
+        transform:scale(1) translateY(0);
+      }
+
+    }
+
+    .title-bar{
+      height:44px;
+
+      display:flex;
+      align-items:center;
+
+      padding:0 16px;
+
+      position:relative;
+
+      background:rgba(44,44,44,.25);
+
+      border-bottom:1px solid rgba(255,255,255,.06);
+
+      user-select:none;
+
+      flex-shrink:0;
+    }
+
+    .traffic-lights{
+      display:flex;
+      align-items:center;
+      gap:8px;
+
+      z-index:2;
+    }
+
+    .dot{
+      width:12px;
+      height:12px;
+
+      border-radius:50%;
+
+      transition:filter .15s ease;
+    }
+
+    .dot:hover{
+      filter:brightness(1.2);
+    }
+
+    .dot-red{
+      background:#ff5f57;
+    }
+
+    .dot-yellow{
+      background:#febc2e;
+    }
+
+    .dot-green{
+      background:#28c840;
+    }
+
+    .window-title{
+      position:absolute;
+      left:50%;
+
+      transform:translateX(-50%);
+
+      font-size:13px;
+      font-weight:500;
+
+      color:rgba(255,255,255,.45);
+
+      letter-spacing:.01em;
+    }
+
+    .window-content{
+      flex:1;
+
+      min-height:320px;
+      padding:32px;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+
+      gap:24px;
+    }
+
+    #typeTarget{
+      color:rgba(255,255,255,.75);
+
+      font-size:15px;
+      letter-spacing:.03em;
+
+      transition:opacity .4s ease;
+    }
+
+    #textLines{
+      width:85%;
+
+      display:none;
+      flex-direction:column;
+      align-items:center;
+
+      gap:14px;
+
+      text-align:center;
+
+      opacity:0;
+
+      transition:opacity 1.5s ease;
+    }
+
+    .text-line{
+      color:rgba(255,255,255,.75);
+
+      font-size:16px;
+      line-height:1.5;
+
+      letter-spacing:.02em;
+    }
+
+    .text-line-with-images{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      gap:8px;
+    }
+
+    .inline-img{
+      width:29px;
+      height:29px;
+
+      display:block;
+
+      border-radius:4px;
+      object-fit:cover;
+
+      opacity:.85;
+    }
+
+    .image-row{
+      display:none;
+
+      align-items:center;
+      justify-content:center;
+
+      gap:12px;
+
+      opacity:0;
+
+      transition:opacity 1.5s ease;
+    }
+
+    .image-row a{
+      width:40px;
+      height:40px;
+
+      display:block;
+
+      overflow:hidden;
+
+      border-radius:8px;
+
+      opacity:.85;
+
+      transition:
+        transform .2s ease,
+        opacity .2s ease;
+    }
+
+    .image-row a:hover{
+      opacity:1;
+      transform:scale(1.06);
+    }
+
+    .image-row img{
+      width:100%;
+      height:100%;
+
+      display:block;
+
+      object-fit:cover;
+    }
+
+  </style>
 </head>
+
 <body>
 
-<div class="video-section">
-  <video class="bg-video" autoplay muted loop playsinline>
-    <source src="https://files.catbox.moe/v1qtxx.mp4" type="video/mp4">
+  <video
+    id="bgVideo"
+    src="https://asset.verslaving.lol/verslaving/v1qtxx.mp4"
+    loop
+    muted
+    playsinline>
   </video>
-</div>
 
-<audio id="music" loop>
-  <source src="https://files.catbox.moe/6to5kk.mp3" type="audio/mpeg">
-</audio>
+  <audio
+    id="bgAudio"
+    src="https://asset.verslaving.lol/verslaving/e99dbi.mp3"
+    loop>
+  </audio>
 
-<div id="overlay">click to enter...</div>
+  <div class="mac-window">
 
-<div class="content">
-  <div class="icon-row">
+    <div class="title-bar">
 
-    <a class="icon" href="https://discord.com/users/392543250973589504" target="_blank">
-      <img src="https://files.catbox.moe/dik4cx.png" alt="Discord">
-    </a>
+      <div class="traffic-lights">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+      </div>
 
-    <a class="icon" href="https://t.me/mcspade" target="_blank">
-      <img src="https://files.catbox.moe/gwzjqm.png" alt="Telegram">
-    </a>
+      <span class="window-title">
+        verslaving.lol
+      </span>
 
-    <a class="icon" href="https://soundcloud.com/j6qc" target="_blank">
-      <img src="https://files.catbox.moe/kq8pfo.png" alt="SoundCloud">
-    </a>
-
-    <a class="icon" href="https://www.roblox.com/users/7573425183/profile" target="_blank">
-      <img src="https://files.catbox.moe/z21yca.png" alt="Roblox">
-    </a>
-
-    <div class="icon" data-copy="bc1q5vh6zfycpyaaphdc9mwvgspd36jdxtevpg08r3">
-      <img src="https://files.catbox.moe/racp3j.png" alt="Bitcoin">
     </div>
 
-    <div class="icon" data-copy="0xB45710783262A5112E30C5ad46b9Cfa7e89442cD">
-      <img src="https://files.catbox.moe/qgkqp3.png" alt="Ethereum">
-    </div>
+    <div class="window-content">
 
-    <div class="icon" data-copy="LiWErv32WhQRKbMKUvCpBJR7sdXbH8YtQs">
-      <img src="https://files.catbox.moe/ovwnqc.png" alt="Litecoin">
-    </div>
+      <span id="typeTarget"></span>
 
-    <div class="icon" data-copy="87WL9RXgKhFUmrq8TQNkkL1bXZo94tziRYcb9AD7TX8A6DHdpRGbXrcUzUgwECDceHcMsdSvtTPLXJnBWUZEJW3Y1dXthun">
-      <img src="https://files.catbox.moe/ytva5h.png" alt="Monero">
+      <div id="textLines">
+
+        <div class="text-line text-line-with-images">
+
+          <img
+            class="inline-img"
+            src="https://asset.verslaving.lol/verslaving/troll-left.png"
+            alt="">
+
+          <span class="text-line">
+            1970
+          </span>
+
+          <img
+            class="inline-img"
+            src="https://asset.verslaving.lol/verslaving/troll-right.png"
+            alt="">
+
+        </div>
+
+        <div class="text-line">Society is beginning to rot</div>
+        <div class="text-line">Time to heal!</div>
+        <div class="text-line">Join us, let's cleanse the world of freaks.</div>
+        <div class="text-line">In the name of His Majesty Satan!</div>
+
+        <div class="text-line text-line-with-images">
+
+          <img
+            class="inline-img"
+            src="https://asset.verslaving.lol/verslaving/troll-left.png"
+            alt="">
+
+          <span class="text-line">
+            #Lulz #Rekt
+          </span>
+
+          <img
+            class="inline-img"
+            src="https://asset.verslaving.lol/verslaving/troll-right.png"
+            alt="">
+
+        </div>
+
+      </div>
+
+      <div class="image-row" id="imageRow">
+
+        <a
+          href="https://discord.com/users/271116382475649037"
+          target="_blank">
+
+          <img
+            src="https://asset.verslaving.lol/verslaving/discord.png"
+            alt="discord">
+
+        </a>
+
+        <a
+          href="https://soundcloud.com/j6qc"
+          target="_blank">
+
+          <img
+            src="https://asset.verslaving.lol/verslaving/soundcloud.png"
+            alt="soundcloud">
+
+        </a>
+
+        <a
+          href="https://open.spotify.com/artist/571j4bNPyNAixE3HldpiAN?si=_TIYpBOnQkucxmv0jakg6Qm"
+          target="_blank">
+
+          <img
+            src="https://asset.verslaving.lol/verslaving/spotify.png"
+            alt="spotify">
+
+        </a>
+
+      </div>
+
     </div>
 
   </div>
-</div>
 
-<div id="view-counter">
-  <img src="https://files.catbox.moe/n7pl2r.png" alt="">
-  <span id="count">0</span>
-</div>
+  <script>
 
-<script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    const introText = "click enter to continue";
 
-const sb = createClient(
-  "https://xmhrlabgazzjhxdernwv.supabase.co",
-  "sb_publishable_XpxtJlAqH_4JVuCQvSiR9g_0HHgL4Kt"
-);
+    const typeTarget = document.getElementById("typeTarget");
+    const linesBox = document.getElementById("textLines");
+    const socials = document.getElementById("imageRow");
 
-const overlay = document.getElementById("overlay");
-const music = document.getElementById("music");
-const counterBox = document.getElementById("view-counter");
-const countEl = document.getElementById("count");
+    const bgVideo = document.getElementById("bgVideo");
+    const bgAudio = document.getElementById("bgAudio");
 
-// update counter
-async function updateViews(){
-  try{
-    await sb.rpc("increment_site_counter");
-    const res = await sb
-      .from("site_counter")
-      .select("views")
-      .eq("id",1)
-      .limit(1);
+    let currentIndex = 0;
+    let introFinished = false;
+    let pageActivated = false;
 
-    if(res.data && res.data[0]){
-      countEl.textContent = res.data[0].views;
+    function startTyping(){
+
+      const typing = setInterval(() => {
+
+        typeTarget.textContent += introText[currentIndex];
+
+        currentIndex++;
+
+        if(currentIndex >= introText.length){
+
+          clearInterval(typing);
+          introFinished = true;
+
+        }
+
+      },35);
+
     }
-  }catch(e){
-    console.log(e);
-  }
-}
 
-updateViews();
+    setTimeout(startTyping,600);
 
-// enter click
-overlay.onclick = function(){
-  if(document.documentElement.requestFullscreen){
-    document.documentElement.requestFullscreen().catch(()=>{});
-  }
+    function activatePage(event){
 
-  music.play().catch(()=>{});
+      if(!introFinished) return;
 
-  overlay.classList.add("hidden");
-  setTimeout(function(){
-    overlay.remove();
-  },500);
+      if(pageActivated) return;
 
-  counterBox.classList.add("visible");
-};
+      if(event.target.closest(".image-row")) return;
 
-// copy handlers
-const copyIcons = document.querySelectorAll(".icon[data-copy]");
-for(let i=0;i<copyIcons.length;i++){
-  copyIcons[i].addEventListener("click",function(){
-    const val = this.getAttribute("data-copy");
-    navigator.clipboard.writeText(val).then(function(){
-      alert("Copied: "+val);
-    }).catch(function(err){
-      console.log(err);
-    });
-  });
-}
-</script>
+      pageActivated = true;
+
+      const root = document.documentElement;
+
+      if(root.requestFullscreen){
+        root.requestFullscreen();
+      }
+      else if(root.webkitRequestFullscreen){
+        root.webkitRequestFullscreen();
+      }
+
+      typeTarget.style.opacity = "0";
+
+      setTimeout(() => {
+
+        typeTarget.style.display = "none";
+
+        linesBox.style.display = "flex";
+        socials.style.display = "flex";
+
+        setTimeout(() => {
+
+          linesBox.style.opacity = "1";
+          socials.style.opacity = "1";
+
+        },20);
+
+      },400);
+
+      bgVideo.muted = true;
+      bgVideo.play();
+
+      bgAudio.volume = 0;
+      bgAudio.play();
+
+      setTimeout(() => {
+        bgVideo.style.opacity = "1";
+      },50);
+
+      const fadeLength = 1500;
+      const totalSteps = 60;
+      const intervalSpeed = fadeLength / totalSteps;
+
+      let fadeStep = 0;
+
+      const fade = setInterval(() => {
+
+        fadeStep++;
+
+        bgAudio.volume = Math.min(fadeStep / totalSteps,1);
+
+        if(fadeStep >= totalSteps){
+          clearInterval(fade);
+        }
+
+      },intervalSpeed);
+
+    }
+
+    document.addEventListener("keydown",activatePage);
+    document.addEventListener("click",activatePage);
+
+  </script>
 
 </body>
 </html>
